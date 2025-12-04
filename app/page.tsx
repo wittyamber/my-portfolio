@@ -1,65 +1,180 @@
+import { client, urlFor } from "@/app/lib/sanity";
 import Image from "next/image";
+import Link from "next/link";
+import { ExternalLink, Github } from "lucide-react"; // Imported Github icon
+import Hero from "@/app/components/Hero";
+import TechStack from "@/app/components/TechStack";
+import About from "@/app/components/About";
+import Contact from "@/app/components/Contact";
 
-export default function Home() {
+// --- 1. UPDATE INTERFACE ---
+interface Project {
+  _id: string;
+  title: string;
+  slug: { current: string };
+  description: string;
+  image: any;
+  techStack: string[];
+  demoLink?: string; // Optional field
+  repoLink?: string; // Optional field
+}
+
+interface Certificate {
+  _id: string;
+  title: string;
+  issuer: string;
+  image: any;
+  link: string;
+}
+
+// --- 2. UPDATE QUERY ---
+async function getData() {
+  const query = `{
+    "projects": *[_type == "project"] {
+      _id, 
+      title, 
+      slug, 
+      description, 
+      image, 
+      techStack,
+      demoLink, 
+      repoLink
+    },
+    "certificates": *[_type == "certificate"] {
+      _id, title, issuer, image, link
+    }
+  }`;
+  
+  const data = await client.fetch(query);
+  return data;
+}
+
+export default async function Home() {
+  const { projects, certificates } = await getData();
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main className="min-h-screen bg-background text-foreground">
+      
+      <Hero />
+      <TechStack />
+      <About />
+
+      {/* PROJECTS SECTION */}
+      <section id="projects" className="container mx-auto px-4 py-24">
+        <h2 className="text-3xl font-bold mb-12 flex items-center gap-2">
+          <span className="w-2 h-8 bg-blue-500 rounded-full"></span>
+          Featured Projects
+        </h2>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {projects.map((project: Project) => (
+            <div key={project._id} className="group border border-border rounded-2xl overflow-hidden bg-card hover:shadow-lg transition-all hover:-translate-y-1 flex flex-col">
+              
+              {/* Image Section (Clickable if demo link exists) */}
+              <div className="relative h-64 w-full overflow-hidden bg-zinc-100 dark:bg-zinc-800">
+                 {project.image ? (
+                   <Image 
+                     src={urlFor(project.image).url()} 
+                     alt={project.title}
+                     fill
+                     className="object-cover transition-transform duration-500 group-hover:scale-105"
+                   />
+                 ) : (
+                   <div className="flex h-full items-center justify-center text-muted-foreground">No Image</div>
+                 )}
+              </div>
+
+              {/* Content Section */}
+              <div className="p-6 flex flex-col flex-grow">
+                <div className="flex justify-between items-start mb-4">
+                    <h3 className="text-2xl font-bold group-hover:text-blue-500 transition-colors">
+                        {project.title}
+                    </h3>
+                    
+                    {/* --- ACTION BUTTONS --- */}
+                    <div className="flex gap-3">
+                        {project.repoLink && (
+                            <Link 
+                                href={project.repoLink} 
+                                target="_blank"
+                                className="text-muted-foreground hover:text-foreground transition-colors"
+                                title="View Source Code"
+                            >
+                                <Github className="w-5 h-5" />
+                            </Link>
+                        )}
+                        {project.demoLink && (
+                            <Link 
+                                href={project.demoLink} 
+                                target="_blank"
+                                className="text-muted-foreground hover:text-blue-500 transition-colors"
+                                title="View Live Demo"
+                            >
+                                <ExternalLink className="w-5 h-5" />
+                            </Link>
+                        )}
+                    </div>
+                </div>
+
+                <p className="text-muted-foreground mb-6 line-clamp-3 flex-grow">
+                  {project.description}
+                </p>
+                
+                <div className="flex flex-wrap gap-2 mt-auto">
+                  {project.techStack?.map((tag) => (
+                    <span key={tag} className="bg-secondary px-3 py-1 rounded-full text-xs font-medium">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      {/* CERTIFICATES SECTION */}
+      <section className="bg-zinc-50 dark:bg-zinc-900/50 py-24 border-y border-border">
+        <div className="container mx-auto px-4">
+            <h2 className="text-3xl font-bold mb-12 text-center">Certifications</h2>
+            
+            <div className="flex flex-wrap justify-center gap-6">
+                {certificates.map((cert: Certificate) => (
+                    <div key={cert._id} className="relative group bg-background border border-border p-4 rounded-xl w-full max-w-sm hover:border-blue-500 transition-colors">
+                        <div className="flex items-center gap-4">
+                            {cert.image && (
+                                <div className="relative w-16 h-16 shrink-0 rounded-lg overflow-hidden border border-border">
+                                    <Image 
+                                        src={urlFor(cert.image).url()} 
+                                        alt={cert.title}
+                                        fill
+                                        className="object-cover"
+                                    />
+                                </div>
+                            )}
+                            <div>
+                                <h4 className="font-bold text-lg leading-tight">{cert.title}</h4>
+                                <p className="text-sm text-muted-foreground">{cert.issuer}</p>
+                            </div>
+                        </div>
+                        
+                        {cert.link && (
+                            <Link 
+                                href={cert.link} 
+                                target="_blank"
+                                className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity text-blue-500"
+                            >
+                                <ExternalLink className="w-5 h-5" />
+                            </Link>
+                        )}
+                    </div>
+                ))}
+            </div>
         </div>
-      </main>
-    </div>
+      </section>
+
+      <Contact />
+
+    </main>
   );
 }
