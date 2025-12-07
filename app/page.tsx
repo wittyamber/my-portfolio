@@ -7,6 +7,7 @@ import TechStack from "@/app/components/TechStack";
 import About from "@/app/components/About";
 import Contact from "@/app/components/Contact";
 import ScrollAnimation from "@/app/components/ScrollAnimation";
+export const revalidate = 60;
 
 interface Project {
   _id: string;
