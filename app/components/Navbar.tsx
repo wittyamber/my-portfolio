@@ -22,7 +22,7 @@ export default function Navbar() {
         {/* Logo Area */}
         <Link href="/" className="font-bold text-xl tracking-tight flex items-center gap-2">
            <span className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
-             JM.
+             JuanaMae.
            </span>
         </Link>
 
