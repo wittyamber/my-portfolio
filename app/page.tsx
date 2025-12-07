@@ -48,18 +48,14 @@ export default async function Home() {
   return (
     <main className="min-h-screen bg-background text-foreground">
       
-      {/* Hero already has its own animation */}
       <Hero />
       
-      {/* TechStack already has its own animation */}
       <TechStack />
       
-      {/* Animated About Section */}
       <ScrollAnimation>
         <About />
       </ScrollAnimation>
 
-      {/* PROJECTS SECTION */}
       <section id="projects" className="container mx-auto px-4 py-24">
         <ScrollAnimation>
           <h2 className="text-3xl font-bold mb-12 flex items-center gap-2">
@@ -70,7 +66,6 @@ export default async function Home() {
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {projects.map((project: Project, index: number) => (
-            // Added delay for cascading effect
             <ScrollAnimation key={project._id} delay={index * 0.1}>
                 <div className="group border border-border rounded-2xl overflow-hidden bg-card hover:shadow-lg transition-all hover:-translate-y-1 flex flex-col h-full">
                 
@@ -125,7 +120,6 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* CERTIFICATES SECTION */}
       <section className="bg-zinc-50 dark:bg-zinc-900/50 py-24 border-y border-border">
         <div className="container mx-auto px-4">
             <ScrollAnimation>
@@ -170,7 +164,6 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Animated Contact Section */}
       <ScrollAnimation>
         <Contact />
       </ScrollAnimation>

@@ -73,7 +73,7 @@ export default function Contact() {
         {/* Footer */}
         <div className="flex flex-col items-center gap-4 pt-24 mt-12 border-t border-border/40">
             <p className="text-sm text-muted-foreground">
-                © {new Date().getFullYear()} Juana Mae.
+                © {new Date().getFullYear()} Juana Mae. | All rights reserved.
             </p>
         </div>
 

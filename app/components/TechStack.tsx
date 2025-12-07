@@ -5,7 +5,8 @@ import { motion } from "framer-motion";
 const skills = [
   "Next.js", "TypeScript", "Tailwind CSS", "Node.js", 
   "Git", "Figma", "Vercel", "JavaScript", 
-  "HTML5", "Laravel", "CSS3", "MySQL"
+  "HTML5", "Laravel", "CSS3", "MySQL",
+  "Java"
 ];
 
 export default function TechStack() {
@@ -17,14 +18,12 @@ export default function TechStack() {
         </p>
       </div>
 
-      {/* The Infinite Marquee Wrapper */}
       <div className="relative flex w-full overflow-hidden mask-linear-gradient">
-        {/* We duplicate the list to create the infinite loop effect */}
         <motion.div
           className="flex min-w-full shrink-0 gap-8 py-2 px-4"
           animate={{ x: "-100%" }}
           transition={{
-            duration: 20, // Speed of the scroll (higher = slower)
+            duration: 20,
             repeat: Infinity,
             ease: "linear",
           }}
@@ -39,7 +38,6 @@ export default function TechStack() {
           ))}
         </motion.div>
         
-        {/* Second copy for seamless looping */}
         <motion.div
           className="flex min-w-full shrink-0 gap-8 py-2 px-4"
           animate={{ x: "-100%" }}
