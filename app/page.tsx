@@ -8,7 +8,6 @@ import About from "@/app/components/About";
 import Contact from "@/app/components/Contact";
 import ScrollAnimation from "@/app/components/ScrollAnimation";
 
-// --- TYPES ---
 interface Project {
   _id: string;
   title: string;
@@ -28,7 +27,6 @@ interface Certificate {
   link: string;
 }
 
-// --- DATA FETCHING ---
 async function getData() {
   const query = `{
     "projects": *[_type == "project"] {
